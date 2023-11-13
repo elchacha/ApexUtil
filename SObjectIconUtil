@@ -1,5 +1,13 @@
 public with sharing class SObjectIconUtil {
 
+    /**
+     * @description       : Set Icon Name/URL
+     * @author            : Amit Agarwal
+     * Blog : https://sforceworld.blogspot.com/
+     * @last modified on  : 11-13-2023
+     * @last modified by  : Fabrice CHALLIER
+    **/
+
     public static String getIconNameById(Id recordId) {
         return getIconName(recordId.getSobjectType().getDescribe().getName());
     }
