@@ -1,0 +1,47 @@
+public with sharing class SObjectIconUtil {
+
+    public static String getIconNameById(Id recordId) {
+        return getIconName(recordId.getSobjectType().getDescribe().getName());
+    }
+
+
+    static Map<String,String> iconByNames = new Map<String,String>();
+    public static String getIconName(String sobjAPIName) {
+        
+        String iconName;
+        if(iconByNames.containsKey(sobjAPIName)) return iconByNames.get(sobjAPIName);
+
+        List<Schema.DescribeTabSetResult> descTab = Schema.describeTabs();      
+
+        for(Schema.DescribeTabSetResult dts : descTab) {
+            List<Schema.DescribeTabResult> tabs = dts.getTabs();        
+            for(Schema.DescribeTabResult tab : tabs) {
+                if(tab.getSobjectName() == sobjAPIName) {
+                    List<Schema.DescribeIconResult> icons = tab.getIcons();                 
+                    for(Schema.DescribeIconResult icon : icons) {    
+                        if(icon.getContentType() == 'image/svg+xml') {
+                            iconName = icon.getUrl();
+                            break;
+                        }
+                    }                  
+                }           
+            }           
+        }
+        
+        if (iconName != null && iconName.contains('custom')) {
+            Integer l1 = iconName.indexOf('/custom/') + '/custom/'.length();
+            Integer l2 = iconName.length() - 4;
+            iconName = 'custom:' + iconName.substring(l1, l2);
+        }
+        
+        if (iconName != null && iconName.contains('standard')) {
+            Integer l1 = iconName.indexOf('/standard/') + '/standard/'.length();
+            Integer l2 = iconName.length() - 4;
+            iconName = 'standard:' + iconName.substring(l1, l2);      
+        }
+
+        iconByNames.put(sobjAPIName,iconName);
+        return iconName;    
+    }
+
+}
