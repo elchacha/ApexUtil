@@ -12,7 +12,7 @@ public with sharing class GenerateObjectCsvFile {
             csvHeaders.add(fieldDef.QualifiedApiName);
         }
 
-        return 'SELECT '+String.join(csvHeaders,',')+' FROM '+sObjectApiName +' WHERE LastModifiedDate >:lastExport';
+        return 'SELECT '+String.join(csvHeaders,',')+' FROM '+sObjectApiName +' WHERE LastModifiedDate >:lastExport ALL ROWS';
     }
 
 
